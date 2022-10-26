@@ -252,6 +252,7 @@ rec {
       opam = "${wlroots.src}/wlroots.opam";
       depends = [ ctypes ctypes-foreign dune mtime ocaml unix-time xkbcommon ];
       buildDepends = [ base dune ocaml stdio ];
+      depexts = [ pkgs.wayland pkgs.wayland-protocols ];
     };
     xkbcommon = {
       name = "xkbcommon";
