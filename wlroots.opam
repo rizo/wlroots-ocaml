@@ -15,6 +15,9 @@ depends: [
   "stdio" { build }
   "tgls" { with-test }
 ]
+depexts: [
+  ["wayland" "wayland-protocols"] {os-distribution = "nixos"}
+]
 build: [
   ["dune" "build" "-p" name "-j" jobs "@install"]
   ["dune" "build" "-p" name "-j" jobs "@examples"] { with-test }
