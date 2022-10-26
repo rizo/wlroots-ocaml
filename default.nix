@@ -1,17 +1,26 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
+  ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
   onix = import (builtins.fetchGit {
     url = "https://github.com/odis-labs/onix.git";
     rev = "ec7e0b480e88f5f19b0dc762aef16b249613d8b6";
-  }) {
-    inherit pkgs;
-    ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
-  };
+  }) { inherit pkgs ocamlPackages; };
+
+  waylandPkgs = let
+    src = builtins.fetchGit {
+      url = "https://github.com/nix-community/nixpkgs-wayland.git";
+      rev = "f0e3a16ee80be6cb0e3f0251a653a59602e5e052";
+    };
+  in import "${src}/packages.nix";
 in rec {
   scope = onix.build {
     lockFile = ./onix-lock.nix;
     overrides = self: super: {
+      wlroots = super.wlroots.overrideAttrs (selfAttrs: superAttrs: {
+        buildInputs = (superAttrs.buildInputs or [ ])
+          ++ [ waylandPkgs.wlroots pkgs.udev pkgs.pixman ];
+      });
       ctypes = super.ctypes.overrideAttrs (selfAttrs: superAttrs: {
         postInstall = ''
           mkdir -p  "$out/lib/ocaml/4.14.0/site-lib/stublibs"
