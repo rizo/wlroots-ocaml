@@ -212,6 +212,17 @@ rec {
       depends = [ dune ocaml ];
       buildDepends = [ dune ocaml ];
     };
+    tgls = {
+      name = "tgls";
+      version = "0.8.6";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/tgls/releases/tgls-0.8.6.tbz";
+        sha512 = "837f030860a8c53d1dad5677240bb106fe4c44270a6615cdf90236fea50882420a303ac6df988b83ef92c1ae5fe6522e39dcb058ef4166422b7978dee4b5143b";
+      };
+      opam = "${repo}/packages/tgls/tgls.0.8.6/opam";
+      depends = [ ctypes ctypes-foreign ocaml ];
+      buildDepends = [ ocaml ocamlbuild ocamlfind topkg ];
+    };
     topkg = {
       name = "topkg";
       version = "1.0.5";
@@ -252,6 +263,7 @@ rec {
       opam = "${wlroots.src}/wlroots.opam";
       depends = [ ctypes ctypes-foreign dune mtime ocaml unix-time xkbcommon ];
       buildDepends = [ base dune ocaml stdio ];
+      testDepends = [ tgls ];
       depexts = [ pkgs.wayland pkgs.wayland-protocols ];
     };
     xkbcommon = {

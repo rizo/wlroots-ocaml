@@ -16,6 +16,7 @@ let
 in rec {
   scope = onix.build {
     lockFile = ./onix-lock.nix;
+    withTest = true;
     overrides = self: super: {
       wlroots = super.wlroots.overrideAttrs (selfAttrs: superAttrs: {
         buildInputs = (superAttrs.buildInputs or [ ])
@@ -39,7 +40,11 @@ in rec {
       "https://github.com/ocaml/opam-repository.git#ae4cd72204df46de6705376d06268c351a8baab6";
     opamFiles = [ "./wlroots.opam" "./vendor/ocaml-xkbcommon/xkbcommon.opam" ];
     resolutions = { "ocaml-system" = "4.14.0"; };
+    withTest = true;
   };
 
-  shell = pkgs.mkShell { inputsFrom = [ scope.wlroots ]; };
+  shell = pkgs.mkShell {
+    inputsFrom = [ scope.wlroots ];
+    buildInputs = [ scope.tgls ];
+  };
 }
