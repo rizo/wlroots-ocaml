@@ -23,7 +23,7 @@ let typ (input: t): typ =
   let data = input |->> Types.Input_device.data in
   match input |->> Types.Input_device.typ with
   | Types.Input_device.Type.Keyboard ->
-    let keyboard = coerce (ptr void) (ptr Types.Keyboard.t) data in
+    let keyboard = Bindings.wlr_keyboard_from_input_device input in
     Keyboard keyboard
   | Types.Input_device.Type.Pointer ->
     let pointer = coerce (ptr void) (ptr Types.Pointer.t) data in

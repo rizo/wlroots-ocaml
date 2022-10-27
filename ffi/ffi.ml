@@ -104,42 +104,6 @@ struct
 
   let wl_resource_p = ptr Wl_resource.t
 
-  (* wlr_output_mode *)
-
-  let wlr_output_mode_p = ptr Output_mode.t
-
-  (* wlr_output *)
-
-  let wlr_output_p = ptr Output.t
-
-  let wlr_output_set_mode = foreign "wlr_output_set_mode"
-      (wlr_output_p @-> wlr_output_mode_p @-> returning void)
-
-  let wlr_output_create_global = foreign "wlr_output_create_global"
-      (wlr_output_p @-> returning void)
-
-  let wlr_output_attach_render = foreign "wlr_output_attach_render"
-      (wlr_output_p @-> ptr int @-> returning bool)
-
-  let wlr_output_commit = foreign "wlr_output_commit"
-      (wlr_output_p @-> returning bool)
-
-  let wlr_output_preferred_mode = foreign "wlr_output_preferred_mode"
-      (wlr_output_p @-> returning wlr_output_mode_p)
-
-  let wlr_output_enable = foreign "wlr_output_enable"
-      (wlr_output_p @-> bool @-> returning void)
-
-  (* wlr_output_layout *)
-
-  let wlr_output_layout_p = ptr Output_layout.t
-
-  let wlr_output_layout_create = foreign "wlr_output_layout_create"
-      (void @-> returning wlr_output_layout_p)
-
-  let wlr_output_layout_add_auto = foreign "wlr_output_layout_add_auto"
-      (wlr_output_layout_p @-> wlr_output_p @-> returning void)
-
   (* wlr_box *)
 
   let wlr_box_p = ptr Box.t
@@ -201,12 +165,65 @@ struct
   let wlr_renderer_init_wl_display = foreign "wlr_renderer_init_wl_display"
       (wlr_renderer_p @-> wl_display_p @-> returning bool)
 
+  (* wlr_allocator *)
+
+  let wlr_allocator_p = ptr Allocator.t
+
+  let wlr_allocator_autocreate = foreign "wlr_allocator_autocreate"
+      (wlr_backend_p @-> wlr_renderer_p @-> returning wlr_allocator_p)
+
+  (* wlr_output_mode *)
+
+  let wlr_output_mode_p = ptr Output_mode.t
+
+  (* wlr_output *)
+
+  let wlr_output_p = ptr Output.t
+
+  let wlr_output_init_render = foreign "wlr_output_init_render"
+      (wlr_output_p @-> wlr_allocator_p @-> wlr_renderer_p @-> returning bool)
+
+  let wlr_output_set_mode = foreign "wlr_output_set_mode"
+      (wlr_output_p @-> wlr_output_mode_p @-> returning void)
+
+  let wlr_output_create_global = foreign "wlr_output_create_global"
+      (wlr_output_p @-> returning void)
+
+  let wlr_output_attach_render = foreign "wlr_output_attach_render"
+      (wlr_output_p @-> ptr int @-> returning bool)
+
+  let wlr_output_commit = foreign "wlr_output_commit"
+      (wlr_output_p @-> returning bool)
+
+  let wlr_output_preferred_mode = foreign "wlr_output_preferred_mode"
+      (wlr_output_p @-> returning wlr_output_mode_p)
+
+  let wlr_output_enable = foreign "wlr_output_enable"
+      (wlr_output_p @-> bool @-> returning void)
+
+  (* wlr_output_layout *)
+
+  let wlr_output_layout_p = ptr Output_layout.t
+
+  let wlr_output_layout_create = foreign "wlr_output_layout_create"
+      (void @-> returning wlr_output_layout_p)
+
+  let wlr_output_layout_add_auto = foreign "wlr_output_layout_add_auto"
+      (wlr_output_layout_p @-> wlr_output_p @-> returning void)
+
+  (* wlr_input_device *)
+
+  let wlr_input_device_p = ptr Input_device.t
+
   (* wlr_keyboard *)
 
   let wlr_keyboard_p = ptr Keyboard.t
 
   let wlr_keyboard_set_keymap = foreign "wlr_keyboard_set_keymap"
       (wlr_keyboard_p @-> Xkbcommon.Keymap.t @-> returning bool)
+
+  let wlr_keyboard_from_input_device = foreign "wlr_keyboard_from_input_device"
+      (wlr_input_device_p @-> returning wlr_keyboard_p)
 
   (* wlr_data_device_manager *)
 
@@ -228,10 +245,6 @@ struct
 
   let wlr_xdg_shell_create = foreign "wlr_xdg_shell_create"
       (wl_display_p @-> int @-> returning wlr_xdg_shell_p)
-
-  (* wlr_input_device *)
-
-  let wlr_input_device_p = ptr Input_device.t
 
   (* wlr_cursor *)
 

@@ -53,3 +53,6 @@ let commit (output : t): bool =
   Bindings.wlr_output_commit output
 
 let enable = Bindings.wlr_output_enable
+
+let init_render (output : t) (allocator : Allocator.t) (renderer : Renderer.t) =
+  Bindings.wlr_output_init_render output allocator renderer

@@ -53,6 +53,11 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let _WL_SEAT_CAPABILITY_TOUCH = constant "WL_SEAT_CAPABILITY_TOUCH" uint64_t
   end
 
+  module Allocator = struct
+    type t = [`allocator] Ctypes.structure
+    let t : t typ = structure "wlr_allocator"
+  end
+
   module Renderer = struct
     type t = [`renderer] Ctypes.structure
     let t : t typ = structure "wlr_renderer"

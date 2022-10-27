@@ -15,6 +15,7 @@ module Pointer = Pointer
 module Touch = Touch
 module Tablet_tool = Tablet_tool
 module Tablet_pad = Tablet_pad
+module Allocator = Allocator
 module Renderer = Renderer
 module Box = Box
 module Matrix = Matrix

@@ -78,40 +78,6 @@ module Matrix : sig
   val project_box : Box.t -> Wl.Output_transform.t -> rotation:float -> t -> t
 end
 
-module Output : sig
-  include Comparable0
-
-  module Mode : sig
-    include Comparable0
-
-    val width : t -> int32
-    val height : t -> int32
-    val refresh : t -> int32 (* mHz *)
-    val preferred : t -> bool
-  end
-
-  (* Setting an output mode *)
-  val modes : t -> Mode.t list
-  val set_mode : t -> Mode.t -> unit
-  val preferred_mode : t -> Mode.t option
-
-  val transform_matrix : t -> Matrix.t
-  val create_global : t -> unit
-  val attach_render : t -> bool
-  val commit : t -> bool
-  val enable : t -> bool -> unit
-
-  val signal_frame : t -> t Wl.Signal.t
-  val signal_destroy : t -> t Wl.Signal.t
-end
-
-module Output_layout : sig
-  include Comparable0
-
-  val create : unit -> t
-  val add_auto : t -> Output.t -> unit
-end
-
 module Keyboard : sig
   include Comparable0
 
@@ -181,7 +147,7 @@ module Input_device : sig
   val signal_destroy : t -> t Wl.Signal.t
 end
 
-module Backend : sig
+module rec Backend : sig
   include Comparable0
 
   val autocreate : Wl.Display.t -> t
@@ -193,7 +159,7 @@ module Backend : sig
   val signal_destroy : t -> t Wl.Signal.t
 end
 
-module Renderer : sig
+and Renderer : sig
   include Comparable0
 
   val autocreate : Backend.t -> t
@@ -202,6 +168,48 @@ module Renderer : sig
   val end_ : t -> unit
   val clear : t -> float * float * float * float -> unit
   val init_wl_display : t -> Wl.Display.t -> bool
+end
+
+and Allocator : sig
+  include Comparable0
+
+  val autocreate : Backend.t -> Renderer.t -> t
+end
+
+and Output : sig
+  include Comparable0
+
+  module Mode : sig
+    include Comparable0
+
+    val width : t -> int32
+    val height : t -> int32
+    val refresh : t -> int32 (* mHz *)
+    val preferred : t -> bool
+  end
+
+  (* Setting an output mode *)
+  val modes : t -> Mode.t list
+  val set_mode : t -> Mode.t -> unit
+  val preferred_mode : t -> Mode.t option
+
+  val transform_matrix : t -> Matrix.t
+  val create_global : t -> unit
+  val attach_render : t -> bool
+  val commit : t -> bool
+  val enable : t -> bool -> unit
+
+  val init_render : t -> Allocator.t -> Renderer.t -> bool
+
+  val signal_frame : t -> t Wl.Signal.t
+  val signal_destroy : t -> t Wl.Signal.t
+end
+
+module Output_layout : sig
+  include Comparable0
+
+  val create : unit -> t
+  val add_auto : t -> Output.t -> unit
 end
 
 module Data_device : sig
