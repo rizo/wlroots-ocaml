@@ -7,6 +7,9 @@ module Types = Wlroots_ffi_f.Ffi.Types
 type t = Types.Renderer.t ptr
 include Ptr
 
+let autocreate (backend : Backend.t) =
+  Bindings.wlr_renderer_autocreate backend
+
 let begin_ (renderer : t) ~width ~height =
   Bindings.wlr_renderer_begin renderer width height
 

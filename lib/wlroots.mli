@@ -181,15 +181,6 @@ module Input_device : sig
   val signal_destroy : t -> t Wl.Signal.t
 end
 
-module Renderer : sig
-  include Comparable0
-
-  val begin_ : t -> width:int -> height:int -> unit
-  val end_ : t -> unit
-  val clear : t -> float * float * float * float -> unit
-  val init_wl_display : t -> Wl.Display.t -> bool
-end
-
 module Backend : sig
   include Comparable0
 
@@ -197,11 +188,20 @@ module Backend : sig
   val start : t -> bool
   val destroy : t -> unit
 
-  val get_renderer : t -> Renderer.t
-
   val signal_new_output : t -> Output.t Wl.Signal.t
   val signal_new_input : t -> Input_device.t Wl.Signal.t
   val signal_destroy : t -> t Wl.Signal.t
+end
+
+module Renderer : sig
+  include Comparable0
+
+  val autocreate : Backend.t -> t
+
+  val begin_ : t -> width:int -> height:int -> unit
+  val end_ : t -> unit
+  val clear : t -> float * float * float * float -> unit
+  val init_wl_display : t -> Wl.Display.t -> bool
 end
 
 module Data_device : sig

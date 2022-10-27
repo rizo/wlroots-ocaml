@@ -169,9 +169,25 @@ struct
   let wlr_surface_send_frame_done = foreign "wlr_surface_send_frame_done"
       (wlr_surface_p @-> time @-> returning void)
 
+  (* wlr_backend *)
+
+  let wlr_backend_p = ptr Backend.t
+
+  let wlr_backend_autocreate = foreign "wlr_backend_autocreate"
+      (wl_display_p @-> returning wlr_backend_p)
+
+  let wlr_backend_start = foreign "wlr_backend_start"
+      (wlr_backend_p @-> returning bool)
+
+  let wlr_backend_destroy = foreign "wlr_backend_destroy"
+      (wlr_backend_p @-> returning void)
+
   (* wlr_renderer *)
 
   let wlr_renderer_p = ptr Renderer.t
+
+  let wlr_renderer_autocreate = foreign "wlr_renderer_autocreate"
+      (wlr_backend_p @-> returning wlr_renderer_p)
 
   let wlr_renderer_begin = foreign "wlr_renderer_begin"
       (wlr_renderer_p @-> int @-> int @-> returning void)
@@ -191,22 +207,6 @@ struct
 
   let wlr_keyboard_set_keymap = foreign "wlr_keyboard_set_keymap"
       (wlr_keyboard_p @-> Xkbcommon.Keymap.t @-> returning bool)
-
-  (* wlr_backend *)
-
-  let wlr_backend_p = ptr Backend.t
-
-  let wlr_backend_get_renderer = foreign "wlr_backend_get_renderer"
-      (wlr_backend_p @-> returning wlr_renderer_p)
-
-  let wlr_backend_autocreate = foreign "wlr_backend_autocreate"
-      (wl_display_p @-> returning wlr_backend_p)
-
-  let wlr_backend_start = foreign "wlr_backend_start"
-      (wlr_backend_p @-> returning bool)
-
-  let wlr_backend_destroy = foreign "wlr_backend_destroy"
-      (wlr_backend_p @-> returning void)
 
   (* wlr_data_device_manager *)
 

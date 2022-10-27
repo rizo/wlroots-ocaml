@@ -107,7 +107,7 @@ let () =
 
   let display = Wl.Display.create () in
   let backend = Backend.autocreate display in
-  let renderer = Backend.get_renderer backend in
+  let renderer = Renderer.autocreate backend in
   assert (Renderer.init_wl_display renderer display);
 
   let _compositor = Compositor.create display renderer in
@@ -115,7 +115,7 @@ let () =
 
   let output_layout = Output_layout.create () in
 
-  let xdg_shell = Xdg_shell.create display in
+  let xdg_shell = Xdg_shell.create display 3 in
 
   let cursor = Cursor.create () in
   Cursor.attach_output_layout cursor output_layout;
