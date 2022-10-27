@@ -1,8 +1,10 @@
 open Wlroots
 open! Tgl3
 
+let fail msg () =
+  prerr_endline msg; exit 1
 
-type sample_state = {
+type state = {
   display : Wl.Display.t;
   new_output : Wl.Listener.t;
   new_input : Wl.Listener.t;
@@ -24,37 +26,34 @@ type keyboard = {
   destroy : Wl.Listener.t;
 }
 
-let fail msg () =
-  print_endline msg; exit 1
-
-let output_frame_notify ~sample _ output =
+let output_frame_notify ~state _ output =
   let now = Mtime_clock.now () in
-  let ms = Mtime.span sample.last_frame now |> Mtime.Span.to_ms in
-  let inc = (sample.dec + 1) mod 3 in
+  let ms = Mtime.span state.last_frame now |> Mtime.Span.to_ms in
+  let inc = (state.dec + 1) mod 3 in
   let dcol = ms /. 2000. in
 
-  sample.color.(inc) <- sample.color.(inc) +. dcol;
-  sample.color.(sample.dec) <- sample.color.(sample.dec) -. dcol;
-  if sample.color.(sample.dec) < 0. then (
-    sample.color.(inc) <- 1.;
-    sample.color.(sample.dec) <- 0.;
-    sample.dec <- inc
+  state.color.(inc) <- state.color.(inc) +. dcol;
+  state.color.(state.dec) <- state.color.(state.dec) -. dcol;
+  if state.color.(state.dec) < 0. then (
+    state.color.(inc) <- 1.;
+    state.color.(state.dec) <- 0.;
+    state.dec <- inc
   );
 
   ignore (Output.attach_render output : bool);
-  Gl.clear_color sample.color.(0) sample.color.(1) sample.color.(2) 1.;
+  Gl.clear_color state.color.(0) state.color.(1) state.color.(2) 1.;
   Gl.clear Gl.color_buffer_bit;
   ignore (Output.commit output : bool);
-  sample.last_frame <- Mtime_clock.now ()
+  state.last_frame <- Mtime_clock.now ()
 
 let output_remove_notify output_handles _ _output =
-  print_endline "Output removed";
+  prerr_endline "Output removed";
   Wl.Listener.detach output_handles.frame;
   Wl.Listener.detach output_handles.destroy
 
-let new_output_notify ~sample _ output =
+let new_output_notify ~state _ output =
   prerr_endline "new_output_notify: init output render";
-  let _ : bool = Output.init_render output sample.allocator sample.renderer in
+  let _ : bool = Output.init_render output state.allocator state.renderer in
 
   prerr_endline "new_output_notify: Creating frame and destroy listeners...";
   let o = { frame = Wl.Listener.create ();
@@ -67,7 +66,7 @@ let new_output_notify ~sample _ output =
     | [] -> ()
   end;
   prerr_endline "new_output_notify: Setting up output frame signal...";
-  Wl.Signal.add (Output.signal_frame output) o.frame (output_frame_notify ~sample);
+  Wl.Signal.add (Output.signal_frame output) o.frame (output_frame_notify ~state);
 
   prerr_endline "new_output_notify: Setting up output destroy signal...";
   Wl.Signal.add (Output.signal_destroy output) o.destroy
@@ -77,11 +76,6 @@ let new_output_notify ~sample _ output =
   ignore (Output.commit output : bool);
   ()
 
-let keyboard_destroy_notify keyboard_handles _ _input =
-  print_endline "keyboard removed";
-  Wl.Listener.detach keyboard_handles.key;
-  Wl.Listener.detach keyboard_handles.destroy
-
 let keyboard_key_notify display keyboard _ event =
   let keycode = Keyboard.Event_key.keycode event + 8 in
   let syms = Xkbcommon.State.key_get_syms (Keyboard.xkb_state keyboard)
@@ -89,6 +83,11 @@ let keyboard_key_notify display keyboard _ event =
   if List.mem Xkbcommon.Keysyms._Escape syms then
     Wl.Display.terminate display;
   ()
+
+let keyboard_destroy_notify keyboard_handles _ _input =
+  print_endline "keyboard removed";
+  Wl.Listener.detach keyboard_handles.key;
+  Wl.Listener.detach keyboard_handles.destroy
 
 let new_input_notify display _ (input: Input_device.t) =
   match Input_device.typ input with
@@ -131,7 +130,7 @@ let () =
   prerr_endline "Creating renderer...";
   let allocator = Allocator.autocreate backend renderer in
 
-  let sample = {
+  let state = {
     color = [|1.; 0.; 0.|];
     dec = 0;
     last_frame = Mtime_clock.now ();
@@ -143,11 +142,11 @@ let () =
   } in
 
   prerr_endline "Setting up new output signal...";
-  Wl.Signal.add (Backend.signal_new_output backend) sample.new_output
-    (new_output_notify ~sample);
+  Wl.Signal.add (Backend.signal_new_output backend) state.new_output
+    (new_output_notify ~state);
 
   prerr_endline "Setting up new input signal...";
-  Wl.Signal.add (Backend.signal_new_input backend) sample.new_input
+  Wl.Signal.add (Backend.signal_new_input backend) state.new_input
     (new_input_notify display);
 
   if not (Backend.start backend) then (
