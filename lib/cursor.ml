@@ -12,25 +12,25 @@ let attach_output_layout = Bindings.wlr_cursor_attach_output_layout
 let attach_input_device = Bindings.wlr_cursor_attach_input_device
 let set_surface = Bindings.wlr_cursor_set_surface
 
-let signal_motion (cursor: t) : Pointer.Event_motion.t Wl.Signal.t = {
+let signal_motion (cursor: t) : Pointer.Motion_event.t Wl.Signal.t = {
   c = cursor |-> Types.Cursor.events_motion;
-  typ = Pointer.Event_motion.t;
+  typ = Pointer.Motion_event.t;
 }
 
 let signal_motion_absolute (cursor: t) :
-  Pointer.Event_motion_absolute.t Wl.Signal.t = {
+  Pointer.Motion_absolute_event.t Wl.Signal.t = {
   c = cursor |-> Types.Cursor.events_motion_absolute;
-  typ = Pointer.Event_motion_absolute.t;
+  typ = Pointer.Motion_absolute_event.t;
 }
 
-let signal_button (cursor: t) : Pointer.Event_button.t Wl.Signal.t = {
+let signal_button (cursor: t) : Pointer.Button_event.t Wl.Signal.t = {
   c = cursor |-> Types.Cursor.events_button;
-  typ = Pointer.Event_button.t;
+  typ = Pointer.Button_event.t;
 }
 
-let signal_axis (cursor: t) : Pointer.Event_axis.t Wl.Signal.t = {
+let signal_axis (cursor: t) : Pointer.Axis_event.t Wl.Signal.t = {
   c = cursor |-> Types.Cursor.events_axis;
-  typ = Pointer.Event_axis.t;
+  typ = Pointer.Axis_event.t;
 }
 
 let signal_frame (cursor: t) : unit Wl.Signal.t = {

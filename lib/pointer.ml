@@ -7,26 +7,26 @@ module Types = Wlroots_ffi_f.Ffi.Types
 type t = Types.Pointer.t ptr
 include Ptr
 
-module Event_motion = struct
-  type t = Types.Event_pointer_motion.t ptr
-  let t = ptr Types.Event_pointer_motion.t
+module Motion_event = struct
+  type t = Types.Pointer_motion_event.t ptr
+  let t = ptr Types.Pointer_motion_event.t
   include Ptr
 end
 
-module Event_motion_absolute = struct
-  type t = Types.Event_pointer_motion_absolute.t ptr
-  let t = ptr Types.Event_pointer_motion_absolute.t
+module Motion_absolute_event = struct
+  type t = Types.Pointer_motion_absolute_event.t ptr
+  let t = ptr Types.Pointer_motion_absolute_event.t
   include Ptr
 end
 
-module Event_button = struct
-  type t = Types.Event_pointer_button.t ptr
-  let t = ptr Types.Event_pointer_button.t
+module Button_event = struct
+  type t = Types.Pointer_button_event.t ptr
+  let t = ptr Types.Pointer_button_event.t
   include Ptr
 end
 
-module Event_axis = struct
-  type t = Types.Event_pointer_axis.t ptr
-  let t = ptr Types.Event_pointer_axis.t
+module Axis_event = struct
+  type t = Types.Pointer_axis_event.t ptr
+  let t = ptr Types.Pointer_axis_event.t
   include Ptr
 end

@@ -20,17 +20,23 @@ type typ =
   | Tablet_pad of Tablet_pad.t
 
 let typ (input: t): typ =
+  let data = input |->> Types.Input_device.data in
   match input |->> Types.Input_device.typ with
   | Types.Input_device.Type.Keyboard ->
-    Keyboard (input |->> Types.Input_device.keyboard)
+    let keyboard = coerce (ptr void) (ptr Types.Keyboard.t) data in
+    Keyboard keyboard
   | Types.Input_device.Type.Pointer ->
-    Pointer (input |->> Types.Input_device.pointer)
+    let pointer = coerce (ptr void) (ptr Types.Pointer.t) data in
+    Pointer pointer
   | Types.Input_device.Type.Touch ->
-    Touch (input |->> Types.Input_device.touch)
+    let touch = coerce (ptr void) (ptr Types.Touch.t) data in
+    Touch touch
   | Types.Input_device.Type.Tablet_tool ->
-    Tablet (input |->> Types.Input_device.tablet)
+    let tablet = coerce (ptr void) (ptr Types.Tablet.t) data in
+    Tablet tablet
   | Types.Input_device.Type.Tablet_pad ->
-    Tablet_pad (input |->> Types.Input_device.tablet_pad)
+    let tablet_pad = coerce (ptr void) (ptr Types.Tablet_pad.t) data in
+    Tablet_pad tablet_pad
 
 let vendor (input: t): int =
   input |->> Types.Input_device.vendor

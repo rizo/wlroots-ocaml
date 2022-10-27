@@ -123,25 +123,63 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let () = seal t
   end
 
-  module Key_state = struct
+  module Button_state = struct
     type t = Released | Pressed
 
-    let _RELEASED = constant "WLR_KEY_RELEASED" int64_t
-    let _PRESSED = constant "WLR_KEY_PRESSED" int64_t
+    let _RELEASED = constant "WLR_BUTTON_RELEASED" int64_t
+    let _PRESSED = constant "WLR_BUTTON_PRESSED" int64_t
 
-    let t : t typ = enum "wlr_key_state" [
+    let t : t typ = enum "wlr_button_state" [
       Released, _RELEASED;
       Pressed, _PRESSED;
     ]
   end
 
-  module Event_keyboard_key = struct
-    type t = [`event_keyboard_key] Ctypes.structure
-    let t : t typ = structure "wlr_event_keyboard_key"
+  (* This is an array of unit32_t keycodes: uint32_t keycodes[] *)
+  module Keycodes = struct
+    type t = unit ptr
+    let t : t typ = ptr void
+  end
+
+  module Key_state = struct
+    type t = Released | Pressed
+
+    let _RELEASED = constant "WL_KEYBOARD_KEY_STATE_RELEASED" int64_t
+    let _PRESSED = constant "WL_KEYBOARD_KEY_STATE_PRESSED" int64_t
+
+    let t : t typ = enum "wl_keyboard_key_state" [
+      Released, _RELEASED;
+      Pressed, _PRESSED;
+    ]
+  end
+
+  module Keyboard_key_event = struct
+    type t = [`keyboard_key_event] Ctypes.structure
+    let t : t typ = structure "wlr_keyboard_key_event"
     let time_msec = field t "time_msec" uint32_t
     let keycode = field t "keycode" int
     let update_state = field t "update_state" bool
     let state = field t "state" Key_state.t
+  end
+
+  module Keyboard_modifier = struct
+    type t = Unsigned.uint32
+    let t : t typ = uint32_t
+
+    let _WLR_MODIFIER_SHIFT = constant "WLR_MODIFIER_SHIFT" t
+    let _WLR_MODIFIER_CAPS = constant "WLR_MODIFIER_CAPS" t
+    let _WLR_MODIFIER_CTRL = constant "WLR_MODIFIER_CTRL" t
+    let _WLR_MODIFIER_ALT = constant "WLR_MODIFIER_ALT" t
+    let _WLR_MODIFIER_MOD2 = constant "WLR_MODIFIER_MOD2" t
+    let _WLR_MODIFIER_MOD3 = constant "WLR_MODIFIER_MOD3" t
+    let _WLR_MODIFIER_LOGO = constant "WLR_MODIFIER_LOGO" t
+    let _WLR_MODIFIER_MOD5 = constant "WLR_MODIFIER_MOD5" t
+  end
+
+  module Keyboard_modifiers = struct
+    type t = [`keyboard_modifier] Ctypes.structure
+    let t : t typ = structure "wlr_keyboard_modifiers"
+    let () = seal t
   end
 
   module Keyboard = struct
@@ -149,7 +187,10 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let t : t typ = structure "wlr_keyboard"
 
     let xkb_state = field t "xkb_state" (lift_typ Xkbcommon.State.t)
+    let modifiers = field t "modifiers" (ptr Keyboard_modifiers.t)
     let events_key = field t "events.key" Wl_signal.t
+    let keycodes = field t "keycodes" Keycodes.t
+    let num_keycodes = field t "num_keycodes" size_t
     let () = seal t
   end
 
@@ -160,30 +201,30 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let () = seal t
   end
 
-  module Event_pointer_motion = struct
-    type t = [`event_pointer_motion] Ctypes.structure
-    let t : t typ = structure "wlr_event_pointer_motion"
+  module Pointer_motion_event = struct
+    type t = [`pointer_motion_event] Ctypes.structure
+    let t : t typ = structure "wlr_pointer_motion_event"
 
     let () = seal t
   end
 
-  module Event_pointer_motion_absolute = struct
-    type t = [`event_pointer_motion_absolute] Ctypes.structure
-    let t : t typ = structure "wlr_event_pointer_motion_absolute"
+  module Pointer_motion_absolute_event = struct
+    type t = [`pointer_motion_absolute_event] Ctypes.structure
+    let t : t typ = structure "wlr_pointer_motion_absolute_event"
 
     let () = seal t
   end
 
-  module Event_pointer_button = struct
-    type t = [`event_pointer_button] Ctypes.structure
-    let t : t typ = structure "wlr_event_pointer_button"
+  module Pointer_button_event = struct
+    type t = [`pointer_button_event] Ctypes.structure
+    let t : t typ = structure "wlr_pointer_button_event"
 
     let () = seal t
   end
 
-  module Event_pointer_axis = struct
-    type t = [`event_pointer_axis] Ctypes.structure
-    let t : t typ = structure "wlr_event_pointer_axis"
+  module Pointer_axis_event = struct
+    type t = [`pointer_axis_event] Ctypes.structure
+    let t : t typ = structure "wlr_pointer_axis_event"
 
     let () = seal t
   end
@@ -194,6 +235,38 @@ module Make (S : Cstubs_structs.TYPE) = struct
 
     let () = seal t
   end
+
+module Tablet_tool_type = struct
+    type t =
+      | Pen
+      | Eraser
+      | Brush
+      | Pencil
+      | Airbrush
+      | Mouse
+      | Lens
+      | Totem
+
+    let _PEN = constant "WLR_TABLET_TOOL_TYPE_PEN" int64_t
+    let _ERASER = constant "WLR_TABLET_TOOL_TYPE_ERASER" int64_t
+    let _BRUSH = constant "WLR_TABLET_TOOL_TYPE_BRUSH" int64_t
+    let _PENCIL = constant "WLR_TABLET_TOOL_TYPE_PENCIL" int64_t
+    let _AIRBRUSH = constant "WLR_TABLET_TOOL_TYPE_AIRBRUSH" int64_t
+    let _MOUSE = constant "WLR_TABLET_TOOL_TYPE_MOUSE" int64_t
+    let _LENS = constant "WLR_TABLET_TOOL_TYPE_LENS" int64_t
+    let _TOTEM = constant "WLR_TABLET_TOOL_TYPE_TOTEM" int64_t
+
+    let t : t typ = enum "wlr_tablet_tool_type" [
+      Pen, _PEN;
+      Eraser, _ERASER;
+      Brush, _BRUSH;
+      Pencil, _PENCIL;
+      Airbrush, _AIRBRUSH;
+      Mouse, _MOUSE;
+      Lens, _LENS;
+      Totem, _TOTEM;
+    ]
+end
 
   module Tablet = struct
     type t = [`tablet_tool] Ctypes.structure
@@ -240,13 +313,15 @@ module Make (S : Cstubs_structs.TYPE) = struct
     let vendor = field t "vendor" int
     let product = field t "product" int
     let name = field t "name" string
-    let keyboard = field t "keyboard" (ptr Keyboard.t)
-    let pointer = field t "pointer" (ptr Pointer.t)
-    let touch = field t "touch" (ptr Touch.t)
-    let tablet = field t "tablet" (ptr Tablet.t)
-    let tablet_pad = field t "tablet_pad" (ptr Tablet_pad.t)
+
+    (* let keyboard = field t "keyboard" (ptr Keyboard.t) *)
+    (* let pointer = field t "pointer" (ptr Pointer.t) *)
+    (* let touch = field t "touch" (ptr Touch.t) *)
+    (* let tablet = field t "tablet" (ptr Tablet.t) *)
+    (* let tablet_pad = field t "tablet_pad" (ptr Tablet_pad.t) *)
 
     let events_destroy = field t "events.destroy" Wl_signal.t
+    let data = field t "data" (ptr void)
 
     (* TODO *)
     let () = seal t

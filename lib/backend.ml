@@ -8,7 +8,7 @@ type t = Types.Backend.t ptr
 include Ptr
 
 let autocreate dpy =
-  let b = Bindings.wlr_backend_autocreate dpy None in
+  let b = Bindings.wlr_backend_autocreate dpy in
   if is_null b then failwith "Failed to create backend";
   b
 

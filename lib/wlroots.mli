@@ -134,19 +134,19 @@ end
 module Pointer : sig
   include Comparable0
 
-  module Event_motion : sig
+  module Motion_event : sig
     include Comparable0
   end
 
-  module Event_motion_absolute : sig
+  module Motion_absolute_event : sig
     include Comparable0
   end
 
-  module Event_button : sig
+  module Button_event : sig
     include Comparable0
   end
 
-  module Event_axis : sig
+  module Axis_event : sig
     include Comparable0
   end
 end
@@ -225,7 +225,7 @@ module Xdg_shell : sig
     include Comparable0
   end
 
-  val create : Wl.Display.t -> t
+  val create : Wl.Display.t -> int -> t
   val signal_new_surface : t -> Surface.t Wl.Signal.t
 end
 
@@ -237,10 +237,10 @@ module Cursor : sig
   val attach_input_device : t -> Input_device.t -> unit
   val set_surface : t -> Surface.t -> int -> int -> unit
   
-  val signal_motion : t -> Pointer.Event_motion.t Wl.Signal.t
-  val signal_motion_absolute : t -> Pointer.Event_motion_absolute.t Wl.Signal.t
-  val signal_button : t -> Pointer.Event_button.t Wl.Signal.t
-  val signal_axis : t -> Pointer.Event_axis.t Wl.Signal.t
+  val signal_motion : t -> Pointer.Motion_event.t Wl.Signal.t
+  val signal_motion_absolute : t -> Pointer.Motion_absolute_event.t Wl.Signal.t
+  val signal_button : t -> Pointer.Button_event.t Wl.Signal.t
+  val signal_axis : t -> Pointer.Axis_event.t Wl.Signal.t
   val signal_frame : t -> unit (* ? *) Wl.Signal.t
 end
 
