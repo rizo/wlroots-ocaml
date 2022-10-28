@@ -21,5 +21,6 @@ module Box = Box
 module Matrix = Matrix
 module Texture = Texture
 module Surface = Surface
+module Scene = Scene
 module Wl = Wl
 module Log = Log

@@ -532,6 +532,78 @@ end
     let () = seal t
   end
 
+
+  module Scene = struct
+    module Node_type = struct
+      type t =
+        | Tree
+        | Rect
+        | Buffer
+
+      let _WLR_SCENE_NODE_TREE = constant "WLR_SCENE_NODE_TREE" int64_t
+      let _WLR_SCENE_NODE_RECT = constant "WLR_SCENE_NODE_RECT" int64_t
+      let _WLR_SCENE_NODE_BUFFER = constant "WLR_SCENE_NODE_BUFFER" int64_t
+
+      let t : t typ = enum "wlr_scene_node_type" [
+        Tree, _WLR_SCENE_NODE_TREE;
+        Rect, _WLR_SCENE_NODE_RECT;
+        Buffer, _WLR_SCENE_NODE_BUFFER;
+      ]
+    end
+
+    (* These are used as recursively dependent types below. *)
+    type node = [`scene_node] Ctypes.structure
+    type tree = [`scene_tree] Ctypes.structure
+    let node : node typ = structure "wlr_scene_node"
+    let tree : tree typ = structure "wlr_scene_tree"
+
+    module Node = struct
+      type t = node
+      let t = node
+
+      let type_ = field t "type" Node_type.t
+      let parent = field t "parent" (ptr tree)
+
+      (* wlr_scene_tree.children *)
+      let link = field t "link" Wl_list.t
+
+      let enabled = field t "enabled" bool
+      let x = field t "x" int
+      let y = field t "y" int
+
+      let events_destroy = field t "events.destroy" Wl_signal.t
+
+      let data = field t "data" (ptr void)
+
+      (* struct wlr_addon_set addons; *)
+
+      let () = seal t
+    end
+
+    module Tree = struct
+      type t = tree
+      let t = tree
+
+      let node = field t "node" Node.t
+
+      (* wlr_scene_node.link *)
+      let children = field t "children" Wl_list.t
+
+      let () = seal t
+    end
+
+
+    type t = [`scene] Ctypes.structure
+
+    let t : t typ = structure "wlr_scene"
+    let tree = field t "tree" Tree.t
+    let outputs = field t "outputs" Wl_list.t
+
+    (* let presentation = field t "presentation" Presentation.t *)
+
+    let () = seal t
+  end
+
   module Log = struct
     type importance =
       | Silent

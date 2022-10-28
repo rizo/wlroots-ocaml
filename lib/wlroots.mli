@@ -233,6 +233,10 @@ module Xdg_shell : sig
     include Comparable0
   end
 
+  module Toplevel : sig
+    include Comparable0
+  end
+
   val create : Wl.Display.t -> int -> t
   val signal_new_surface : t -> Surface.t Wl.Signal.t
 end
@@ -287,6 +291,14 @@ module Seat : sig
   val signal_request_set_cursor :
     t -> Pointer_request_set_cursor_event.t Wl.Signal.t
   val set_capabilities : t -> Wl.Seat_capability.t -> unit
+end
+
+module Scene : sig
+  include Comparable0
+
+  module Tree : sig
+    include Comparable0
+  end
 end
 
 module Log : sig
