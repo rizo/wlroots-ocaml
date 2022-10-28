@@ -17,6 +17,7 @@ in rec {
   scope = onix.build {
     lockFile = ./onix-lock.nix;
     withTest = true;
+    withTools = true;
     overrides = self: super: {
       wlroots = super.wlroots.overrideAttrs (selfAttrs: superAttrs: {
         buildInputs = (superAttrs.buildInputs or [ ])
@@ -41,6 +42,7 @@ in rec {
     opamFiles = [ "./wlroots.opam" "./vendor/ocaml-xkbcommon/xkbcommon.opam" ];
     resolutions = { "ocaml-system" = "4.14.0"; };
     withTest = true;
+    withTools = true;
   };
 
   shell = pkgs.mkShell {

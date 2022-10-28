@@ -6,6 +6,17 @@ rec {
     rev = "ae4cd72204df46de6705376d06268c351a8baab6";
   };
   scope = rec {
+    astring = {
+      name = "astring";
+      version = "0.8.5";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/astring/releases/astring-0.8.5.tbz";
+        sha256 = "1ykhg9gd3iy7zsgyiy2p9b1wkpqg9irw5pvcqs3sphq71iir4ml6";
+      };
+      opam = "${repo}/packages/astring/astring.0.8.5/opam";
+      depends = [ ocaml ];
+      buildDepends = [ ocaml ocamlbuild ocamlfind topkg ];
+    };
     base = {
       name = "base";
       version = "v0.15.1";
@@ -16,6 +27,11 @@ rec {
       opam = "${repo}/packages/base/base.v0.15.1/opam";
       depends = [ dune dune-configurator ocaml sexplib0 ];
       buildDepends = [ dune dune-configurator ocaml ];
+    };
+    base-bigarray = {
+      name = "base-bigarray";
+      version = "base";
+      opam = "${repo}/packages/base-bigarray/base-bigarray.base/opam";
     };
     base-bytes = {
       name = "base-bytes";
@@ -33,6 +49,39 @@ rec {
       name = "base-unix";
       version = "base";
       opam = "${repo}/packages/base-unix/base-unix.base/opam";
+    };
+    camlp-streams = {
+      name = "camlp-streams";
+      version = "5.0.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/camlp-streams/archive/v5.0.1.tar.gz";
+        sha512 = "2efa8dd4a636217c8d49bac1e4e7e5558fc2f45cfea66514140a59fd99dd08d61fb9f1e17804997ff648b71b13820a5d4a1eb70fed9d848aa2abd6e41f853c86";
+      };
+      opam = "${repo}/packages/camlp-streams/camlp-streams.5.0.1/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    chrome-trace = {
+      name = "chrome-trace";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/chrome-trace/chrome-trace.3.4.1/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    cmdliner = {
+      name = "cmdliner";
+      version = "1.1.1";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/cmdliner/releases/cmdliner-1.1.1.tbz";
+        sha512 = "5478ad833da254b5587b3746e3a8493e66e867a081ac0f653a901cc8a7d944f66e4387592215ce25d939be76f281c4785702f54d4a74b1700bc8838a62255c9e";
+      };
+      opam = "${repo}/packages/cmdliner/cmdliner.1.1.1/opam";
+      depends = [ ocaml ];
+      buildDepends = [ ocaml ];
     };
     conf-libffi = {
       name = "conf-libffi";
@@ -54,6 +103,17 @@ rec {
       buildDepends = [ conf-pkg-config ];
       depexts = [ (pkgs.libxkbcommon or null) (pkgs.libxkbcommon-dev or null)
                   (pkgs.libxkbcommon-devel or null) ];
+    };
+    cppo = {
+      name = "cppo";
+      version = "1.6.9";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-community/cppo/archive/v1.6.9.tar.gz";
+        sha512 = "26ff5a7b7f38c460661974b23ca190f0feae3a99f1974e0fd12ccf08745bd7d91b7bc168c70a5385b837bfff9530e0e4e41cf269f23dd8cf16ca658008244b44";
+      };
+      opam = "${repo}/packages/cppo/cppo.1.6.9/opam";
+      depends = [ base-unix dune ocaml ];
+      buildDepends = [ dune ocaml ];
     };
     csexp = {
       name = "csexp";
@@ -95,6 +155,17 @@ rec {
       depends = [ base-threads base-unix ocaml ];
       buildDepends = [ ocaml ];
     };
+    dune-build-info = {
+      name = "dune-build-info";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/dune-build-info/dune-build-info.3.4.1/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
     dune-configurator = {
       name = "dune-configurator";
       version = "3.4.1";
@@ -106,6 +177,72 @@ rec {
       depends = [ base-unix csexp dune ocaml ];
       buildDepends = [ dune ocaml ];
     };
+    dune-rpc = {
+      name = "dune-rpc";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/dune-rpc/dune-rpc.3.4.1/opam";
+      depends = [ csexp dune dyn ordering pp stdune xdg ];
+      buildDepends = [ dune ];
+    };
+    dyn = {
+      name = "dyn";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/dyn/dyn.3.4.1/opam";
+      depends = [ dune ocaml ordering pp ];
+      buildDepends = [ dune ocaml ];
+    };
+    either = {
+      name = "either";
+      version = "1.0.0";
+      src = pkgs.fetchurl {
+        url = "https://github.com/mirage/either/releases/download/1.0.0/either-1.0.0.tbz";
+        sha256 = "bf674de3312dee7b7215f07df1e8a96eb3d679164b8a918cdd95b8d97e505884";
+      };
+      opam = "${repo}/packages/either/either.1.0.0/opam";
+      depends = [ dune ];
+      buildDepends = [ dune ];
+    };
+    fiber = {
+      name = "fiber";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/fiber/fiber.3.4.1/opam";
+      depends = [ dune dyn ocaml stdune ];
+      buildDepends = [ dune ocaml ];
+    };
+    fix = {
+      name = "fix";
+      version = "20220121";
+      src = pkgs.fetchurl {
+        url = "https://gitlab.inria.fr/fpottier/fix/-/archive/20220121/archive.tar.gz";
+        sha512 = "a851d8783c0c519c6e55359a5c471af433058872409c29a1a7bdfd0076813341ad2c0ebd1ce9e28bff4d4c729dfbc808c41c084fe12a42b45a2b5e391e77ccd2";
+      };
+      opam = "${repo}/packages/fix/fix.20220121/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    fpath = {
+      name = "fpath";
+      version = "0.7.3";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/fpath/releases/fpath-0.7.3.tbz";
+        sha256 = "03z7mj0sqdz465rc4drj1gr88l9q3nfs374yssvdjdyhjbqqzc0j";
+      };
+      opam = "${repo}/packages/fpath/fpath.0.7.3/opam";
+      depends = [ astring ocaml ];
+      buildDepends = [ ocaml ocamlbuild ocamlfind topkg ];
+    };
     integers = {
       name = "integers";
       version = "0.7.0";
@@ -115,6 +252,39 @@ rec {
       };
       opam = "${repo}/packages/integers/integers.0.7.0/opam";
       depends = [ dune ocaml stdlib-shims ];
+      buildDepends = [ dune ocaml ];
+    };
+    menhir = {
+      name = "menhir";
+      version = "20220210";
+      src = pkgs.fetchurl {
+        url = "https://gitlab.inria.fr/fpottier/menhir/-/archive/20220210/archive.tar.gz";
+        sha512 = "3063fec1d8b9fe092c8461b0689d426c7fe381a2bf3fd258dc42ceecca1719d32efbb8a18d94ada5555c38175ea352da3adbb239fdbcbcf52c3a5c85a4d9586f";
+      };
+      opam = "${repo}/packages/menhir/menhir.20220210/opam";
+      depends = [ dune menhirLib menhirSdk ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    menhirLib = {
+      name = "menhirLib";
+      version = "20220210";
+      src = pkgs.fetchurl {
+        url = "https://gitlab.inria.fr/fpottier/menhir/-/archive/20220210/archive.tar.gz";
+        sha512 = "3063fec1d8b9fe092c8461b0689d426c7fe381a2bf3fd258dc42ceecca1719d32efbb8a18d94ada5555c38175ea352da3adbb239fdbcbcf52c3a5c85a4d9586f";
+      };
+      opam = "${repo}/packages/menhirLib/menhirLib.20220210/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    menhirSdk = {
+      name = "menhirSdk";
+      version = "20220210";
+      src = pkgs.fetchurl {
+        url = "https://gitlab.inria.fr/fpottier/menhir/-/archive/20220210/archive.tar.gz";
+        sha512 = "3063fec1d8b9fe092c8461b0689d426c7fe381a2bf3fd258dc42ceecca1719d32efbb8a18d94ada5555c38175ea352da3adbb239fdbcbcf52c3a5c85a4d9586f";
+      };
+      opam = "${repo}/packages/menhirSdk/menhirSdk.20220210/opam";
+      depends = [ dune ocaml ];
       buildDepends = [ dune ocaml ];
     };
     mtime = {
@@ -140,11 +310,35 @@ rec {
       opam = "${repo}/packages/ocaml-config/ocaml-config.2/opam";
       depends = [ ocaml-system ];
     };
+    ocaml-lsp-server = {
+      name = "ocaml-lsp-server";
+      version = "1.13.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/ocaml-lsp/releases/download/1.13.1/lsp-1.13.1.tbz";
+        sha256 = "e55f5bd88a5be2ff325fbc3b98eb7317d64de12b3f59d8c812e3ea2824fd0cfc";
+      };
+      opam = "${repo}/packages/ocaml-lsp-server/ocaml-lsp-server.1.13.1/opam";
+      depends = [ chrome-trace csexp dune dune-build-info dune-rpc dyn fiber
+                  ocaml ocamlformat-rpc-lib octavius omd ordering pp
+                  ppx_yojson_conv_lib re spawn stdune uutf xdg yojson ];
+      buildDepends = [ dune ocaml ];
+    };
     ocaml-system = {
       name = "ocaml-system";
       version = "4.14.0";
       opam = "${repo}/packages/ocaml-system/ocaml-system.4.14.0/opam";
       depexts = [ pkgs.ocaml-ng.ocamlPackages_4_14.ocaml ];
+    };
+    ocaml-version = {
+      name = "ocaml-version";
+      version = "3.5.0";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocurrent/ocaml-version/releases/download/v3.5.0/ocaml-version-3.5.0.tbz";
+        sha256 = "d63ca1c3970d6b14057f7176bfdae623e6c0176287c6a6e8b78cf50e2f7f635b";
+      };
+      opam = "${repo}/packages/ocaml-version/ocaml-version.3.5.0/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
     };
     ocamlbuild = {
       name = "ocamlbuild";
@@ -168,6 +362,118 @@ rec {
       depends = [ ocaml ];
       buildDepends = [ ocaml ];
     };
+    ocamlformat = {
+      name = "ocamlformat";
+      version = "0.24.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-ppx/ocamlformat/releases/download/0.24.1/ocamlformat-0.24.1.tbz";
+        sha256 = "023425e9818f80ea50537b2371a4a766c149a9957d05807e88a004d2d5f441ce";
+      };
+      opam = "${repo}/packages/ocamlformat/ocamlformat.0.24.1/opam";
+      depends = [ base cmdliner csexp dune dune-build-info either fix fpath
+                  menhir menhirLib menhirSdk ocaml ocaml-version ocp-indent
+                  odoc-parser re stdio uuseg uutf ];
+      buildDepends = [ dune menhir ocaml ];
+    };
+    ocamlformat-rpc-lib = {
+      name = "ocamlformat-rpc-lib";
+      version = "0.24.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-ppx/ocamlformat/releases/download/0.24.1/ocamlformat-0.24.1.tbz";
+        sha256 = "023425e9818f80ea50537b2371a4a766c149a9957d05807e88a004d2d5f441ce";
+      };
+      opam = "${repo}/packages/ocamlformat-rpc-lib/ocamlformat-rpc-lib.0.24.1/opam";
+      depends = [ csexp dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    ocp-indent = {
+      name = "ocp-indent";
+      version = "1.8.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/OCamlPro/ocp-indent/archive/1.8.1.tar.gz";
+        sha512 = "565353de333dd44375366fff75e85a6256c3cd9ff52b3db79803141f975e77cda04dfe32f5e0f2d4c82c59be8f04e9c2bf4d066b113b2cdf267f4c3dcfa401da";
+      };
+      opam = "${repo}/packages/ocp-indent/ocp-indent.1.8.1/opam";
+      depends = [ base-bytes cmdliner dune ocaml ocamlfind ];
+      buildDepends = [ dune ocaml ocamlfind ];
+    };
+    octavius = {
+      name = "octavius";
+      version = "1.2.2";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-doc/octavius/archive/v1.2.2.tar.gz";
+        sha256 = "1bg0fcm7haqxvx5wx2cci0mbbq0gf1vw9fa4kkd6jsriw1611jga";
+      };
+      opam = "${repo}/packages/octavius/octavius.1.2.2/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    odoc-parser = {
+      name = "odoc-parser";
+      version = "2.0.0";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-doc/odoc-parser/releases/download/2.0.0/odoc-parser-2.0.0.tbz";
+        sha256 = "407919fbb0eb95761d6fc6ec6777628d94aa1907343bdca678b1880bafb33922";
+      };
+      opam = "${repo}/packages/odoc-parser/odoc-parser.2.0.0/opam";
+      depends = [ astring camlp-streams dune ocaml result ];
+      buildDepends = [ dune ocaml ];
+    };
+    omd = {
+      name = "omd";
+      version = "1.3.2";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/omd/releases/download/1.3.2/omd-1.3.2.tbz";
+        sha256 = "6023e1642631f08f678eb5725820879ed7bb5a3ffee777cdedebc28c1f85fadb";
+      };
+      opam = "${repo}/packages/omd/omd.1.3.2/opam";
+      depends = [ base-bigarray base-bytes dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    ordering = {
+      name = "ordering";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/ordering/ordering.3.4.1/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    pp = {
+      name = "pp";
+      version = "1.1.2";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-dune/pp/releases/download/1.1.2/pp-1.1.2.tbz";
+        sha256 = "e4a4e98d96b1bb76950fcd6da4e938c86d989df4d7e48f02f7a44595f5af1d56";
+      };
+      opam = "${repo}/packages/pp/pp.1.1.2/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    ppx_yojson_conv_lib = {
+      name = "ppx_yojson_conv_lib";
+      version = "v0.15.0";
+      src = pkgs.fetchurl {
+        url = "https://ocaml.janestreet.com/ocaml-core/v0.15/files/ppx_yojson_conv_lib-v0.15.0.tar.gz";
+        sha256 = "f9d2c5eff4566ec1f1f379b186ed22c8ddd6be0909a160bc5a9ac7abc6a6b684";
+      };
+      opam = "${repo}/packages/ppx_yojson_conv_lib/ppx_yojson_conv_lib.v0.15.0/opam";
+      depends = [ dune ocaml yojson ];
+      buildDepends = [ dune ocaml ];
+    };
+    re = {
+      name = "re";
+      version = "1.10.4";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/ocaml-re/releases/download/1.10.4/re-1.10.4.tbz";
+        sha256 = "83eb3e4300aa9b1dc7820749010f4362ea83524742130524d78c20ce99ca747c";
+      };
+      opam = "${repo}/packages/re/re.1.10.4/opam";
+      depends = [ dune ocaml seq ];
+      buildDepends = [ dune ocaml ];
+    };
     result = {
       name = "result";
       version = "1.5";
@@ -179,6 +485,13 @@ rec {
       depends = [ dune ocaml ];
       buildDepends = [ dune ocaml ];
     };
+    seq = {
+      name = "seq";
+      version = "base";
+      opam = "${repo}/packages/seq/seq.base/opam";
+      depends = [ ocaml ];
+      buildDepends = [ ocaml ];
+    };
     sexplib0 = {
       name = "sexplib0";
       version = "v0.15.1";
@@ -187,6 +500,17 @@ rec {
         sha256 = "1cv78931di97av82khqwmx5s51mrn9d2b82z0si88gxwndz83kg8";
       };
       opam = "${repo}/packages/sexplib0/sexplib0.v0.15.1/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    spawn = {
+      name = "spawn";
+      version = "v0.15.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/janestreet/spawn/archive/v0.15.1.tar.gz";
+        sha256 = "9afdee314fab6c3fcd689ab6eb5608d6b78078e6dede3953a47debde06c19d50";
+      };
+      opam = "${repo}/packages/spawn/spawn.v0.15.1/opam";
       depends = [ dune ocaml ];
       buildDepends = [ dune ocaml ];
     };
@@ -210,6 +534,17 @@ rec {
       };
       opam = "${repo}/packages/stdlib-shims/stdlib-shims.0.3.0/opam";
       depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
+    };
+    stdune = {
+      name = "stdune";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/stdune/stdune.3.4.1/opam";
+      depends = [ base-unix csexp dune dyn ocaml ordering pp ];
       buildDepends = [ dune ocaml ];
     };
     tgls = {
@@ -256,6 +591,39 @@ rec {
       depends = [ base-unix ctypes ocaml unix-errno ];
       buildDepends = [ ocaml ocamlbuild ocamlfind ];
     };
+    uucp = {
+      name = "uucp";
+      version = "15.0.0";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/uucp/releases/uucp-15.0.0.tbz";
+        sha512 = "ee4acff5666961766321e85e287fb9d5b8d50533319f22bf6f4eceb943242df2d0e0f4e775c4a140f68ca142837938eaa5926e22362215a3365ffe7f8768923b";
+      };
+      opam = "${repo}/packages/uucp/uucp.15.0.0/opam";
+      depends = [ cmdliner ocaml uutf ];
+      buildDepends = [ ocaml ocamlbuild ocamlfind topkg ];
+    };
+    uuseg = {
+      name = "uuseg";
+      version = "15.0.0";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/uuseg/releases/uuseg-15.0.0.tbz";
+        sha512 = "37ea83b582dd779a026cfae11f08f5d67ef79fce65a2cf03f2a9aabc7eb5de60c8e812524fa7531e4ff6e22a3b18228e3438a0143ce43be95f23237cc283576f";
+      };
+      opam = "${repo}/packages/uuseg/uuseg.15.0.0/opam";
+      depends = [ cmdliner ocaml uucp uutf ];
+      buildDepends = [ ocaml ocamlbuild ocamlfind topkg ];
+    };
+    uutf = {
+      name = "uutf";
+      version = "1.0.3";
+      src = pkgs.fetchurl {
+        url = "https://erratique.ch/software/uutf/releases/uutf-1.0.3.tbz";
+        sha512 = "50cc4486021da46fb08156e9daec0d57b4ca469b07309c508d5a9a41e9dbcf1f32dec2ed7be027326544453dcaf9c2534919395fd826dc7768efc6cc4bfcc9f8";
+      };
+      opam = "${repo}/packages/uutf/uutf.1.0.3/opam";
+      depends = [ cmdliner ocaml ];
+      buildDepends = [ ocaml ocamlbuild ocamlfind topkg ];
+    };
     wlroots = {
       name = "wlroots";
       version = "root";
@@ -264,7 +632,19 @@ rec {
       depends = [ ctypes ctypes-foreign dune mtime ocaml unix-time xkbcommon ];
       buildDepends = [ base dune ocaml stdio ];
       testDepends = [ tgls ];
+      toolsDepends = [ ocaml-lsp-server ocamlformat ];
       depexts = [ pkgs.wayland pkgs.wayland-protocols ];
+    };
+    xdg = {
+      name = "xdg";
+      version = "3.4.1";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml/dune/releases/download/3.4.1/dune-3.4.1.tbz";
+        sha256 = "299fa33cffc108cc26ff59d5fc9d09f6cb0ab3ac280bf23a0114cfdc0b40c6c5";
+      };
+      opam = "${repo}/packages/xdg/xdg.3.4.1/opam";
+      depends = [ dune ocaml ];
+      buildDepends = [ dune ocaml ];
     };
     xkbcommon = {
       name = "xkbcommon";
@@ -273,6 +653,17 @@ rec {
       opam = "${xkbcommon.src}/xkbcommon.opam";
       depends = [ conf-xkbcommon ctypes ctypes-foreign dune ocaml ];
       buildDepends = [ base dune ocaml stdio ];
+    };
+    yojson = {
+      name = "yojson";
+      version = "2.0.2";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ocaml-community/yojson/releases/download/2.0.2/yojson-2.0.2.tbz";
+        sha256 = "876bb6f38af73a84a29438a3da35e4857c60a14556a606525b148c6fdbe5461b";
+      };
+      opam = "${repo}/packages/yojson/yojson.2.0.2/opam";
+      depends = [ dune ocaml seq ];
+      buildDepends = [ cppo dune ocaml ];
     };
   };
 }
