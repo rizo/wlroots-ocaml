@@ -372,6 +372,104 @@ end
     let () = seal t
   end
 
+  (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_toplevel_state = struct
+    type t = [`xdg_toplevel_state] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_toplevel_state"
+
+    let maximized = field t "maximized" bool
+    let fullscreen = field t "fullscreen" bool
+    let resizing = field t "resizing" bool
+    let activated = field t "activated" bool
+
+    (* enum wlr_edges *)
+    let tiled = field t "tiled" uint32_t
+
+    let width = field t "width" uint32_t
+    let height = field t "height" uint32_t
+    let max_width = field t "max_width" uint32_t
+    let max_height = field t "max_height" uint32_t
+    let () = seal t
+  end
+
+  (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_toplevel_configure = struct
+    type t = [`xdg_toplevel_configure] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_toplevel_configure"
+
+    (* enum wlr_xdg_toplevel_configure_field *)
+    let fields = field t "fields" uint32_t
+
+    let maximized = field t "maximized" bool
+    let fullscreen = field t "fullscreen" bool
+    let resizing = field t "resizing" bool
+    let activated = field t "activated" bool
+
+    (* enum wlr_edges *)
+    let tiled = field t "tiled" uint32_t
+
+    let width = field t "width" uint32_t
+    let height = field t "height" uint32_t
+
+    let bounds_width = field t "bounds.width" uint32_t
+    let bounds_height = field t "bounds.height" uint32_t
+
+    (* enum wlr_xdg_toplevel_wm_capabilities *)
+    let wm_capabilities = field t "wm_capabilities" uint32_t 
+
+    let () = seal t
+  end
+
+  (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_toplevel_requested = struct
+    type t = [`xdg_toplevel_requested] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_toplevel_requested"
+
+    let maximized = field t "maximized" bool
+    let minimized = field t "minimized" bool
+    let fullscreen = field t "fullscreen" bool
+
+    let fullscreen_output = field t "fullscreen_output" Output.t
+    let fullscreen_output_destroy = field t "fullscreen_output_destroy" Wl_listener.t
+  end
+
+  (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_toplevel = struct
+    type t = [`xdg_toplevel] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_toplevel"
+
+    let resource = field t "resource" (ptr Wl_resource.t)
+    let base = field t "base" (ptr Xdg_surface.t)
+    let added = field t "added" bool
+
+    let parent = field t "parent" (ptr t)
+    let parent_unmap = field t "parent_unmap" Wl_listener.t
+
+    let current = field t "current" Xdg_toplevel_state.t
+    let pending = field t "pending" Xdg_toplevel_state.t
+
+
+    let scheduled = field t "scheduled" Xdg_toplevel_configure.t
+
+    let requested = field t "requested" Xdg_toplevel_requested.t
+
+    let title = field t "title" string
+    let app_id = field t "app_id" string
+
+		let request_maximize = field t "events.request_maximize" Wl_signal.t
+		let request_fullscreen = field t "events.request_fullscreen" Wl_signal.t
+
+		let request_minimize = field t "events.request_minimize" Wl_signal.t
+		let request_move = field t "events.request_move" Wl_signal.t
+		let request_resize = field t "events.request_resize" Wl_signal.t
+		let request_show_window_menu = field t "events.request_show_window_menu" Wl_signal.t
+		let set_parent = field t "events.set_parent" Wl_signal.t
+		let set_title = field t "events.set_title" Wl_signal.t
+		let set_app_id = field t "events.set_app_id" Wl_signal.t
+
+    let () = seal t
+  end
+
   module Xdg_shell = struct
     type t = [`xdg_shell] Ctypes.structure
     let t : t typ = structure "wlr_xdg_shell"
