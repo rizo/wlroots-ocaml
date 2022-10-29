@@ -106,7 +106,7 @@ struct
 
   (* wlr_box *)
 
-  let wlr_box_p = ptr Box.t
+  let wlr_box_p = ptr Wlr_box.t
 
   (* wlr_matrix *)
 
@@ -118,11 +118,11 @@ struct
 
   (* wlr_texture *)
 
-  let wlr_texture_p = ptr Texture.t
+  let wlr_texture_p = ptr Wlr_texture.t
 
   (* wlr_surface *)
 
-  let wlr_surface_p = ptr Surface.t
+  let wlr_surface_p = ptr Wlr_surface.t
 
   let wlr_surface_from_resource = foreign "wlr_surface_from_resource"
       (wl_resource_p @-> returning wlr_surface_p)
@@ -135,7 +135,7 @@ struct
 
   (* wlr_backend *)
 
-  let wlr_backend_p = ptr Backend.t
+  let wlr_backend_p = ptr Wlr_backend.t
 
   let wlr_backend_autocreate = foreign "wlr_backend_autocreate"
       (wl_display_p @-> returning wlr_backend_p)
@@ -148,7 +148,7 @@ struct
 
   (* wlr_renderer *)
 
-  let wlr_renderer_p = ptr Renderer.t
+  let wlr_renderer_p = ptr Wlr_renderer.t
 
   let wlr_renderer_autocreate = foreign "wlr_renderer_autocreate"
       (wlr_backend_p @-> returning wlr_renderer_p)
@@ -167,18 +167,18 @@ struct
 
   (* wlr_allocator *)
 
-  let wlr_allocator_p = ptr Allocator.t
+  let wlr_allocator_p = ptr Wlr_allocator.t
 
   let wlr_allocator_autocreate = foreign "wlr_allocator_autocreate"
       (wlr_backend_p @-> wlr_renderer_p @-> returning wlr_allocator_p)
 
   (* wlr_output_mode *)
 
-  let wlr_output_mode_p = ptr Output_mode.t
+  let wlr_output_mode_p = ptr Wlr_output_mode.t
 
   (* wlr_output *)
 
-  let wlr_output_p = ptr Output.t
+  let wlr_output_p = ptr Wlr_output.t
 
   let wlr_output_init_render = foreign "wlr_output_init_render"
       (wlr_output_p @-> wlr_allocator_p @-> wlr_renderer_p @-> returning bool)
@@ -203,7 +203,7 @@ struct
 
   (* wlr_output_layout *)
 
-  let wlr_output_layout_p = ptr Output_layout.t
+  let wlr_output_layout_p = ptr Wlr_output_layout.t
 
   let wlr_output_layout_create = foreign "wlr_output_layout_create"
       (void @-> returning wlr_output_layout_p)
@@ -213,11 +213,11 @@ struct
 
   (* wlr_input_device *)
 
-  let wlr_input_device_p = ptr Input_device.t
+  let wlr_input_device_p = ptr Wlr_input_device.t
 
   (* wlr_keyboard *)
 
-  let wlr_keyboard_p = ptr Keyboard.t
+  let wlr_keyboard_p = ptr Wlr_keyboard.t
 
   let wlr_keyboard_set_keymap = foreign "wlr_keyboard_set_keymap"
       (wlr_keyboard_p @-> Xkbcommon.Keymap.t @-> returning bool)
@@ -227,35 +227,35 @@ struct
 
   (* wlr_data_device_manager *)
 
-  let wlr_data_device_manager_p = ptr Data_device_manager.t
+  let wlr_data_device_manager_p = ptr Wlr_data_device_manager.t
 
   let wlr_data_device_manager_create = foreign "wlr_data_device_manager_create"
       (wl_display_p @-> returning wlr_data_device_manager_p)
 
   (* wlr_compositor *)
 
-  let wlr_compositor_p = ptr Compositor.t
+  let wlr_compositor_p = ptr Wlr_compositor.t
 
   let wlr_compositor_create = foreign "wlr_compositor_create"
       (wl_display_p @-> wlr_renderer_p @-> returning wlr_compositor_p)
 
   (* wlr_subcompositor *)
 
-  let wlr_subcompositor_p = ptr Subcompositor.t
+  let wlr_subcompositor_p = ptr Wlr_subcompositor.t
 
   let wlr_subcompositor_create = foreign "wlr_subcompositor_create"
       (wl_display_p @-> returning wlr_subcompositor_p)
 
   (* wlr_xdg_shell *)
 
-  let wlr_xdg_shell_p = ptr Xdg_shell.t
+  let wlr_xdg_shell_p = ptr Wlr_xdg_shell.t
 
   let wlr_xdg_shell_create = foreign "wlr_xdg_shell_create"
       (wl_display_p @-> int @-> returning wlr_xdg_shell_p)
 
   (* wlr_xdg_surface *)
 
-  let wlr_xdg_surface_p = ptr Xdg_surface.t
+  let wlr_xdg_surface_p = ptr Wlr_xdg_surface.t
 
   let wlr_surface_is_xdg_surface = foreign "wlr_surface_is_xdg_surface"
       (wlr_surface_p @-> returning bool)
@@ -265,7 +265,7 @@ struct
 
   (* wlr_cursor *)
 
-  let wlr_cursor_p = ptr Cursor.t
+  let wlr_cursor_p = ptr Wlr_cursor.t
 
   let wlr_cursor_create = foreign "wlr_cursor_create"
       (void @-> returning wlr_cursor_p)
@@ -284,7 +284,7 @@ struct
 
   (* wlr_xcursor_manager *)
 
-  let wlr_xcursor_manager_p = ptr Xcursor_manager.t
+  let wlr_xcursor_manager_p = ptr Wlr_xcursor_manager.t
 
   let wlr_xcursor_manager_create = foreign "wlr_xcursor_manager_create"
       (string_opt @-> int @-> returning wlr_xcursor_manager_p)
@@ -294,7 +294,7 @@ struct
 
   (* wlr_seat *)
 
-  let wlr_seat_p = ptr Seat.t
+  let wlr_seat_p = ptr Wlr_seat.t
 
   let wlr_seat_create = foreign "wlr_seat_create"
       (wl_display_p @-> string @-> returning wlr_seat_p)
@@ -302,7 +302,7 @@ struct
   let wlr_seat_set_capabilities = foreign "wlr_seat_set_capabilities"
       (wlr_seat_p @-> Wl_seat_capability.t @-> returning void)
 
-  let wlr_scene_p = ptr Scene.t
+  let wlr_scene_p = ptr Wlr_scene.t
 
   let wlr_scene_create = foreign "wlr_scene_create"
       (void @-> returning wlr_scene_p)
@@ -314,7 +314,7 @@ struct
 
   (* TODO *)
   let log_callback_t = ptr void
-  let log_importance_t = Log.importance
+  let log_importance_t = Wlr_log.importance
 
   let wlr_log_init = foreign "wlr_log_init"
       (log_importance_t @-> log_callback_t @-> returning void)

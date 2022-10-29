@@ -4,36 +4,36 @@ open Wlroots_common.Utils
 module Bindings = Wlroots_ffi_f.Ffi.Make (Generated_ffi)
 module Types = Wlroots_ffi_f.Ffi.Types
 
-type t = Types.Output.t ptr
+type t = Types.Wlr_output.t ptr
 include Ptr
 
 let signal_frame (output : t) : t Wl.Signal.t = {
-  c = output |-> Types.Output.events_frame;
-  typ = ptr Types.Output.t;
+  c = output |-> Types.Wlr_output.events_frame;
+  typ = ptr Types.Wlr_output.t;
 }
 
 let signal_destroy (output : t) : t Wl.Signal.t = {
-  c = output |-> Types.Output.events_destroy;
-  typ = ptr Types.Output.t;
+  c = output |-> Types.Wlr_output.events_destroy;
+  typ = ptr Types.Wlr_output.t;
 }
 
 module Mode = struct
-  type t = Types.Output_mode.t ptr
+  type t = Types.Wlr_output_mode.t ptr
   include Ptr
 
-  let width = getfield Types.Output_mode.width
-  let height = getfield Types.Output_mode.height
-  let refresh = getfield Types.Output_mode.refresh
-  let preferred = getfield Types.Output_mode.preferred
+  let width = getfield Types.Wlr_output_mode.width
+  let height = getfield Types.Wlr_output_mode.height
+  let refresh = getfield Types.Wlr_output_mode.refresh
+  let preferred = getfield Types.Wlr_output_mode.preferred
 end
 
 let modes (output : t) : Mode.t list =
-  (output |-> Types.Output.modes)
+  (output |-> Types.Wlr_output.modes)
   |> Bindings.ocaml_of_wl_list
-    (container_of Types.Output_mode.t Types.Output_mode.link)
+    (container_of Types.Wlr_output_mode.t Types.Wlr_output_mode.link)
 
 let transform_matrix (output : t) : Matrix.t =
-  CArray.start (output |->> Types.Output.transform_matrix)
+  CArray.start (output |->> Types.Wlr_output.transform_matrix)
 
 let set_mode (output : t) (mode : Mode.t): unit =
   Bindings.wlr_output_set_mode output mode

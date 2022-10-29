@@ -4,16 +4,16 @@ open Wlroots_common.Utils
 module Bindings = Wlroots_ffi_f.Ffi.Make (Generated_ffi)
 module Types = Wlroots_ffi_f.Ffi.Types
 
-type t = Types.Xdg_surface.t ptr
-let t = ptr Types.Xdg_surface.t
+type t = Types.Wlr_xdg_surface.t ptr
+let t = ptr Types.Wlr_xdg_surface.t
 include Ptr
 
-type role = Types.Xdg_surface_role.t = None | Toplevel | Popup
+type role = Types.Wlr_xdg_surface_role.t = None | Toplevel | Popup
 
-let role = getfield Types.Xdg_surface.role
+let role = getfield Types.Wlr_xdg_surface.role
 
-let toplevel = getfield Types.Xdg_surface.toplevel
-let popup = getfield Types.Xdg_surface.popup
+let toplevel = getfield Types.Wlr_xdg_surface.toplevel
+let popup = getfield Types.Wlr_xdg_surface.popup
 
 let from_surface (surface : Surface.t) : t option =
   (* This is not exactly a verbatim binding but it is safer *)

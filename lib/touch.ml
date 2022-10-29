@@ -4,5 +4,5 @@ open Wlroots_common.Utils
 module Bindings = Wlroots_ffi_f.Ffi.Make (Generated_ffi)
 module Types = Wlroots_ffi_f.Ffi.Types
 
-type t = Types.Touch.t ptr
+type t = Types.Wlr_touch.t ptr
 include Ptr

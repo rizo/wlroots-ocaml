@@ -4,7 +4,7 @@ open! Wlroots_common.Utils
 module Bindings = Wlroots_ffi_f.Ffi.Make (Generated_ffi)
 module Types = Wlroots_ffi_f.Ffi.Types
 
-include Types.Log
+include Types.Wlr_log
 
 (* TODO: callback *)
 let init importance =

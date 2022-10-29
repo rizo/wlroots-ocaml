@@ -4,11 +4,11 @@ open Wlroots_common.Utils
 module Bindings = Wlroots_ffi_f.Ffi.Make (Generated_ffi)
 module Types = Wlroots_ffi_f.Ffi.Types
 
-type t = Types.Scene.t ptr
+type t = Types.Wlr_scene.t ptr
 include Ptr
 
 module Tree = struct
-  type t = Types.Scene.Tree.t ptr
+  type t = Types.Wlr_scene_tree.t ptr
   include Ptr
 end
 

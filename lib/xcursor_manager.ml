@@ -4,7 +4,7 @@ open Wlroots_common.Utils
 module Bindings = Wlroots_ffi_f.Ffi.Make (Generated_ffi)
 module Types = Wlroots_ffi_f.Ffi.Types
 
-type t = Types.Xcursor_manager.t ptr
+type t = Types.Wlr_xcursor_manager.t ptr
 include Ptr
 
 let create = Bindings.wlr_xcursor_manager_create
