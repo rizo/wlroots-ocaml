@@ -239,6 +239,13 @@ struct
   let wlr_compositor_create = foreign "wlr_compositor_create"
       (wl_display_p @-> wlr_renderer_p @-> returning wlr_compositor_p)
 
+  (* wlr_subcompositor *)
+
+  let wlr_subcompositor_p = ptr Subcompositor.t
+
+  let wlr_subcompositor_create = foreign "wlr_subcompositor_create"
+      (wl_display_p @-> returning wlr_subcompositor_p)
+
   (* wlr_xdg_shell *)
 
   let wlr_xdg_shell_p = ptr Xdg_shell.t
@@ -284,6 +291,14 @@ struct
 
   let wlr_seat_set_capabilities = foreign "wlr_seat_set_capabilities"
       (wlr_seat_p @-> Wl_seat_capability.t @-> returning void)
+
+  let wlr_scene_p = ptr Scene.t
+
+  let wlr_scene_create = foreign "wlr_scene_create"
+      (void @-> returning wlr_scene_p)
+
+  let wlr_scene_attach_output_layout = foreign "wlr_scene_attach_output_layout"
+      (wlr_scene_p @-> wlr_output_layout_p @-> returning bool)
 
   (* wlr_log *)
 

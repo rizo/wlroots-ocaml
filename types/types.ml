@@ -365,6 +365,14 @@ end
     let () = seal t
   end
 
+  module Subcompositor = struct
+    type t = [`subcompositor] Ctypes.structure
+    let t : t typ = structure "wlr_subcompositor"
+
+    (* TODO *)
+    let () = seal t
+  end
+
   module Xdg_surface = struct
     type t = [`xdg_surface] Ctypes.structure
     let t : t typ = structure "wlr_xdg_surface"
@@ -497,6 +505,13 @@ end
     let () = seal t
   end
 
+  (* include/wlr/types/wlr_data_device.h *)
+  module Data_source = struct
+    type t = [`data_source] Ctypes.structure
+    let t : t typ = structure "wlr_data_source"
+    let () = seal t
+  end
+
   module Seat_client = struct
     type t = [`seat_client] Ctypes.structure
     let t : t typ = structure "wlr_seat_client"
@@ -517,6 +532,8 @@ end
 
     let events_request_set_cursor =
       field t "events.request_set_cursor" Wl_signal.t
+    let events_request_set_selection =
+      field t "events.request_set_selection" Wl_signal.t
     let pointer_state =
       field t "pointer_state" Seat_pointer_state.t
     let () = seal t
@@ -529,6 +546,16 @@ end
     let surface = field t "surface" (ptr Surface.t)
     let hotspot_x = field t "hotspot_x" int
     let hotspot_y = field t "hotspot_y" int
+    let () = seal t
+  end
+
+  module Seat_request_set_selection_event = struct
+    type t = [`seat_request_set_selection_event] Ctypes.structure
+    let t : t typ = structure "wlr_seat_request_set_selection_event"
+
+    let source = field t "source" (ptr Data_source.t)
+    let serial = field t "serial" uint32_t
+
     let () = seal t
   end
 

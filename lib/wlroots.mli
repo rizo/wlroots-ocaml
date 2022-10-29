@@ -226,6 +226,12 @@ module Compositor : sig
   val create : Wl.Display.t -> Renderer.t -> t
 end
 
+module Subcompositor : sig
+  include Comparable0
+
+  val create : Wl.Display.t -> t
+end
+
 module Xdg_shell : sig
   include Comparable0
 
@@ -285,11 +291,17 @@ module Seat : sig
     val hotspot_y : t -> int
   end
 
+  module Request_set_selection_event : sig
+    include Comparable0
+  end
+
   val pointer_state : t -> Pointer_state.t
 
   val create : Wl.Display.t -> string -> t
   val signal_request_set_cursor :
     t -> Pointer_request_set_cursor_event.t Wl.Signal.t
+  val signal_request_set_selection :
+    t -> Request_set_selection_event.t Wl.Signal.t
   val set_capabilities : t -> Wl.Seat_capability.t -> unit
 end
 
@@ -299,6 +311,10 @@ module Scene : sig
   module Tree : sig
     include Comparable0
   end
+
+  val create : unit -> t
+
+  val attach_output_layout : t -> Output_layout.t -> bool
 end
 
 module Log : sig
