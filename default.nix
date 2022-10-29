@@ -4,7 +4,7 @@ let
   ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
   onix = import (builtins.fetchGit {
     url = "https://github.com/odis-labs/onix.git";
-    rev = "ec7e0b480e88f5f19b0dc762aef16b249613d8b6";
+    rev = "4960c6bb9ba3b8cec1d20b35b290350b1555d188";
   }) { inherit pkgs ocamlPackages; };
 
   waylandPkgs = let
@@ -17,11 +17,14 @@ in rec {
   scope = onix.build {
     lockFile = ./onix-lock.nix;
     withTest = true;
-    withTools = true;
+    withDevSetup = true;
     overrides = self: super: {
       wlroots = super.wlroots.overrideAttrs (selfAttrs: superAttrs: {
-        buildInputs = (superAttrs.buildInputs or [ ])
-          ++ [ waylandPkgs.wlroots pkgs.udev pkgs.pixman ];
+        buildInputs = (superAttrs.buildInputs or [ ]) ++ [
+          waylandPkgs.wlroots
+          pkgs.udev
+          pkgs.pixman
+        ];
       });
       ctypes = super.ctypes.overrideAttrs (selfAttrs: superAttrs: {
         postInstall = ''
@@ -39,10 +42,10 @@ in rec {
   lock = onix.lock {
     repoUrl =
       "https://github.com/ocaml/opam-repository.git#ae4cd72204df46de6705376d06268c351a8baab6";
-    opamFiles = [ "./wlroots.opam" "./vendor/ocaml-xkbcommon/xkbcommon.opam" ];
+    opamFiles = [ "./wlroots.opam" ];
     resolutions = { "ocaml-system" = "4.14.0"; };
     withTest = true;
-    withTools = true;
+    withDevSetup = true;
   };
 
   shell = pkgs.mkShell {

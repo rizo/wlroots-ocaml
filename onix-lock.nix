@@ -632,7 +632,7 @@ rec {
       depends = [ ctypes ctypes-foreign dune mtime ocaml unix-time xkbcommon ];
       buildDepends = [ base dune ocaml stdio ];
       testDepends = [ tgls ];
-      toolsDepends = [ ocaml-lsp-server ocamlformat ];
+      devSetupDepends = [ ocaml-lsp-server ocamlformat ];
       depexts = [ pkgs.wayland pkgs.wayland-protocols ];
     };
     xdg = {
@@ -648,8 +648,12 @@ rec {
     };
     xkbcommon = {
       name = "xkbcommon";
-      version = "root";
-      src = pkgs.nix-gitignore.gitignoreSource [] ./vendor/ocaml-xkbcommon;
+      version = "dev";
+      src = builtins.fetchGit {
+        url = "https://github.com/rizo/ocaml-xkbcommon.git";
+        rev = "cd9b9420d90aef8c7bb58616d6612f6a2cca8dda";
+        allRefs = true;
+      };
       opam = "${xkbcommon.src}/xkbcommon.opam";
       depends = [ conf-xkbcommon ctypes ctypes-foreign dune ocaml ];
       buildDepends = [ base dune ocaml stdio ];

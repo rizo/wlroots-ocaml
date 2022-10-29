@@ -3,6 +3,10 @@ maintainer: "Armael <armael@isomorphis.me>"
 authors: "Armael <armael@isomorphis.me>"
 homepage: "https://github.com/swaywm/wlroots-ocaml"
 bug-reports: "https://github.com/swaywm/wlroots-ocaml/issues"
+build: [
+  ["dune" "build" "-p" name "-j" jobs "@install"]
+  ["dune" "build" "-p" name "-j" jobs "@examples"] { with-test }
+]
 depends: [
   "ocaml" {>= "4.04.1"}
   "xkbcommon"
@@ -14,13 +18,12 @@ depends: [
   "base" { build }
   "stdio" { build }
   "tgls" { with-test }
-  "ocaml-lsp-server" {with-tools}
-  "ocamlformat" {with-tools}
+  "ocaml-lsp-server" { with-dev-setup }
+  "ocamlformat" { with-dev-setup }
 ]
 depexts: [
-  ["wayland" "wayland-protocols"] {os-distribution = "nixos"}
+  ["wayland" "wayland-protocols"] { os-distribution = "nixos" }
 ]
-build: [
-  ["dune" "build" "-p" name "-j" jobs "@install"]
-  ["dune" "build" "-p" name "-j" jobs "@examples"] { with-test }
+pin-depends: [
+  ["xkbcommon.dev" "git+https://github.com/rizo/ocaml-xkbcommon.git#cd9b9420d90aef8c7bb58616d6612f6a2cca8dda"]
 ]
