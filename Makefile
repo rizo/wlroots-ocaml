@@ -10,4 +10,10 @@ examples:
 clean:
 	rm -rf _build
 
-.PHONY: default clean examples
+docker-build:
+	docker build -t wlroots-ocaml .
+
+docker-shell:
+	docker run -it -v "$$PWD:/app" wlroots-ocaml nix-shell -A shell
+
+.PHONY: default clean examples docker-build docker-shell
