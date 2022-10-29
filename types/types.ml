@@ -373,12 +373,78 @@ end
     let () = seal t
   end
 
-  module Xdg_surface = struct
-    type t = [`xdg_surface] Ctypes.structure
-    let t : t typ = structure "wlr_xdg_surface"
+  (* include/wlr/types/wlr_data_device.h *)
+  module Data_source = struct
+    type t = [`data_source] Ctypes.structure
+    let t : t typ = structure "wlr_data_source"
+    let () = seal t
+  end
+
+  module Seat_client = struct
+    type t = [`seat_client] Ctypes.structure
+    let t : t typ = structure "wlr_seat_client"
+    let () = seal t
+  end
+
+  module Seat_pointer_state = struct
+    type t = [`seat_pointer_state] Ctypes.structure
+    let t : t typ = structure "wlr_seat_pointer_state"
+    let focused_client = field t "focused_client"
+        (ptr Seat_client.t)
+    let () = seal t
+  end
+
+  module Seat = struct
+    type t = [`seat] Ctypes.structure
+    let t : t typ = structure "wlr_seat"
+
+    let events_request_set_cursor =
+      field t "events.request_set_cursor" Wl_signal.t
+    let events_request_set_selection =
+      field t "events.request_set_selection" Wl_signal.t
+    let pointer_state =
+      field t "pointer_state" Seat_pointer_state.t
+    let () = seal t
+  end
+
+  module Seat_pointer_request_set_cursor_event = struct
+    type t = [`seat_pointer_request_set_cursor_event] Ctypes.structure
+    let t : t typ = structure "wlr_seat_pointer_request_set_cursor_event"
+    let seat_client = field t "seat_client" (ptr Seat_client.t)
+    let surface = field t "surface" (ptr Surface.t)
+    let hotspot_x = field t "hotspot_x" int
+    let hotspot_y = field t "hotspot_y" int
+    let () = seal t
+  end
+
+  module Seat_request_set_selection_event = struct
+    type t = [`seat_request_set_selection_event] Ctypes.structure
+    let t : t typ = structure "wlr_seat_request_set_selection_event"
+
+    let source = field t "source" (ptr Data_source.t)
+    let serial = field t "serial" uint32_t
 
     let () = seal t
   end
+
+  (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_surface_role = struct
+    type t =
+      | None
+      | Toplevel
+      | Popup
+
+    let _WLR_XDG_SURFACE_ROLE_NONE = constant "WLR_XDG_SURFACE_ROLE_NONE" int64_t
+    let _WLR_XDG_SURFACE_ROLE_TOPLEVEL = constant "WLR_XDG_SURFACE_ROLE_TOPLEVEL" int64_t
+    let _WLR_XDG_SURFACE_ROLE_POPUP = constant "WLR_XDG_SURFACE_ROLE_POPUP" int64_t
+
+    let t : t typ = enum "wlr_xdg_surface_role" [
+      None, _WLR_XDG_SURFACE_ROLE_NONE;
+      Toplevel, _WLR_XDG_SURFACE_ROLE_TOPLEVEL;
+      Popup, _WLR_XDG_SURFACE_ROLE_POPUP;
+    ]
+  end
+
 
   (* include/wlr/types/wlr_xdg_shell.h *)
   module Xdg_toplevel_state = struct
@@ -442,12 +508,25 @@ end
   end
 
   (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_popup = struct
+    type t = [`xdg_popup] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_popup"
+
+    let parent = field t "parent" (ptr Surface.t)
+    let seat = field t "seat" (ptr Seat.t)
+    let committed = field t "committed" bool
+  end
+
+  (* include/wlr/types/wlr_xdg_shell.h *)
   module Xdg_toplevel = struct
     type t = [`xdg_toplevel] Ctypes.structure
     let t : t typ = structure "wlr_xdg_toplevel"
 
     let resource = field t "resource" (ptr Wl_resource.t)
-    let base = field t "base" (ptr Xdg_surface.t)
+
+    (* FIXME: Circular. *)
+    (* let base = field t "base" (ptr Xdg_surface.t) *)
+
     let added = field t "added" bool
 
     let parent = field t "parent" (ptr t)
@@ -464,20 +543,43 @@ end
     let title = field t "title" string
     let app_id = field t "app_id" string
 
-		let request_maximize = field t "events.request_maximize" Wl_signal.t
-		let request_fullscreen = field t "events.request_fullscreen" Wl_signal.t
+    let request_maximize = field t "events.request_maximize" Wl_signal.t
+    let request_fullscreen = field t "events.request_fullscreen" Wl_signal.t
 
-		let request_minimize = field t "events.request_minimize" Wl_signal.t
-		let request_move = field t "events.request_move" Wl_signal.t
-		let request_resize = field t "events.request_resize" Wl_signal.t
-		let request_show_window_menu = field t "events.request_show_window_menu" Wl_signal.t
-		let set_parent = field t "events.set_parent" Wl_signal.t
-		let set_title = field t "events.set_title" Wl_signal.t
-		let set_app_id = field t "events.set_app_id" Wl_signal.t
+    let request_minimize = field t "events.request_minimize" Wl_signal.t
+    let request_move = field t "events.request_move" Wl_signal.t
+    let request_resize = field t "events.request_resize" Wl_signal.t
+    let request_show_window_menu = field t "events.request_show_window_menu" Wl_signal.t
+    let set_parent = field t "events.set_parent" Wl_signal.t
+    let set_title = field t "events.set_title" Wl_signal.t
+    let set_app_id = field t "events.set_app_id" Wl_signal.t
 
     let () = seal t
   end
 
+  (* include/wlr/types/wlr_xdg_shell.h *)
+  module Xdg_surface = struct
+    type t = [`xdg_surface] Ctypes.structure
+    let t : t typ = structure "wlr_xdg_surface"
+
+    let resource = field t "resource" (ptr Wl_resource.t)
+    let surface = field t "surface" (ptr Surface.t)
+    let role = field t "role" Xdg_surface_role.t
+    let toplevel = field t "toplevel" (ptr Xdg_toplevel.t)
+    let popup = field t "popup" (ptr Xdg_popup.t)
+
+    let events_destroy = field t "events.destroy" Wl_signal.t
+    let events_ping_timeout = field t "events.ping_timeout" Wl_signal.t
+    let events_new_popup = field t "events.new_popup" Wl_signal.t
+    let events_map = field t "events.map" Wl_signal.t
+    let events_unmap = field t "events.unmap" Wl_signal.t
+    let events_configure = field t "events.configure" Wl_signal.t
+    let events_ack_configure = field t "events.ack_configure" Wl_signal.t
+
+    let () = seal t
+  end
+
+  (* include/wlr/types/wlr_xdg_shell.h *)
   module Xdg_shell = struct
     type t = [`xdg_shell] Ctypes.structure
     let t : t typ = structure "wlr_xdg_shell"
@@ -504,61 +606,6 @@ end
     let t : t typ = structure "wlr_xcursor_manager"
     let () = seal t
   end
-
-  (* include/wlr/types/wlr_data_device.h *)
-  module Data_source = struct
-    type t = [`data_source] Ctypes.structure
-    let t : t typ = structure "wlr_data_source"
-    let () = seal t
-  end
-
-  module Seat_client = struct
-    type t = [`seat_client] Ctypes.structure
-    let t : t typ = structure "wlr_seat_client"
-    let () = seal t
-  end
-
-  module Seat_pointer_state = struct
-    type t = [`seat_pointer_state] Ctypes.structure
-    let t : t typ = structure "wlr_seat_pointer_state"
-    let focused_client = field t "focused_client"
-        (ptr Seat_client.t)
-    let () = seal t
-  end
-
-  module Seat = struct
-    type t = [`seat] Ctypes.structure
-    let t : t typ = structure "wlr_seat"
-
-    let events_request_set_cursor =
-      field t "events.request_set_cursor" Wl_signal.t
-    let events_request_set_selection =
-      field t "events.request_set_selection" Wl_signal.t
-    let pointer_state =
-      field t "pointer_state" Seat_pointer_state.t
-    let () = seal t
-  end
-
-  module Seat_pointer_request_set_cursor_event = struct
-    type t = [`seat_pointer_request_set_cursor_event] Ctypes.structure
-    let t : t typ = structure "wlr_seat_pointer_request_set_cursor_event"
-    let seat_client = field t "seat_client" (ptr Seat_client.t)
-    let surface = field t "surface" (ptr Surface.t)
-    let hotspot_x = field t "hotspot_x" int
-    let hotspot_y = field t "hotspot_y" int
-    let () = seal t
-  end
-
-  module Seat_request_set_selection_event = struct
-    type t = [`seat_request_set_selection_event] Ctypes.structure
-    let t : t typ = structure "wlr_seat_request_set_selection_event"
-
-    let source = field t "source" (ptr Data_source.t)
-    let serial = field t "serial" uint32_t
-
-    let () = seal t
-  end
-
 
   module Scene = struct
     module Node_type = struct

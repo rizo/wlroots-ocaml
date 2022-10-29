@@ -232,19 +232,34 @@ module Subcompositor : sig
   val create : Wl.Display.t -> t
 end
 
+module Xdg_popup : sig
+  include Comparable0
+
+  val parent : t -> Surface.t
+end
+
+
+module Xdg_surface : sig
+  include Comparable0
+
+  type role = None | Toplevel | Popup
+
+  val role : t -> role
+
+  val from_surface : Surface.t -> t option
+  val toplevel : t -> Xdg_toplevel.t
+  val popup : t -> Xdg_popup.t
+end
+
+module Xdg_toplevel : sig
+  include Comparable0
+end
+
 module Xdg_shell : sig
   include Comparable0
 
-  module Surface : sig
-    include Comparable0
-  end
-
-  module Toplevel : sig
-    include Comparable0
-  end
-
   val create : Wl.Display.t -> int -> t
-  val signal_new_surface : t -> Surface.t Wl.Signal.t
+  val signal_new_surface : t -> Xdg_surface.t Wl.Signal.t
 end
 
 module Cursor : sig

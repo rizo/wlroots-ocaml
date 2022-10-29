@@ -21,7 +21,7 @@ type tinywl_view = {
 	(* struct wl_list link; *)
 	(* struct tinywl_server *server; *)
 	(* struct wlr_xdg_toplevel *xdg_toplevel; *)
-  xdg_toplevel : Wlr.Xdg_shell.Toplevel.t;
+  xdg_toplevel : Wlr.Xdg_toplevel.t;
 	(* struct wlr_scene_tree *scene_tree; *)
   scene_tree : Wlr.Scene.Tree.t;
 	(* struct wl_listener map; *)
@@ -119,30 +119,83 @@ type tinywl_keyboard = {
 	(* struct wl_listener destroy; *)
   destroy : Wl.Listener.t;
 }
+
+let output_frame ~server:_ _ _ =
+  failwith "todo"
+
+let output_destroy ~server:_ _ _ =
+  failwith "todo"
+
+(* This event is raised by the backend when a new output (aka a display or
+   monitor) becomes available. *)
+let server_new_output ~server _ wlr_output =
+	(* Configures the output created by the backend to use our allocator
+	   and our renderer. Must be done once, before commiting the output *)
+  ignore (Wlr.Output.init_render wlr_output server.allocator server.renderer : bool);
+
+	(* Some backends don't have modes. DRM+KMS does, and we need to set a mode
+	   before we can use the output. The mode is a tuple of (width, height,
+	   refresh rate), and each monitor supports only a specific set of modes. We
+	   just pick the monitor's preferred mode, a more sophisticated compositor
+	   would let the user configure it. *)
+  let output_is_ok = 
+    match Wlr.Output.preferred_mode wlr_output with
+    | Some mode ->
+      Wlr.Output.set_mode wlr_output mode;
+      Wlr.Output.enable wlr_output true;
+      Wlr.Output.commit wlr_output
+    | None -> true
+  in
+  if output_is_ok then (
+    let output = {
+      wlr_output;
+      frame = Wl.Listener.create ();
+      destroy = Wl.Listener.create ();
+    } in
+    (* Sets up a listener for the frame notify event. *)
+    Wl.Signal.add (Wlr.Output.signal_frame wlr_output) output.frame (output_frame ~server);
+    Wl.Signal.add (Wlr.Output.signal_destroy wlr_output) output.destroy (output_destroy ~server);
+
+    server.outputs <- output :: server.outputs;
+
+    (* Adds this to the output layout. The add_auto function arranges outputs
+       from left-to-right in the order they appear. A more sophisticated
+       compositor would let the user configure the arrangement of outputs in the
+       layout.
+      
+       The output layout utility automatically adds a wl_output global to the
+       display, which Wayland clients can see to find out information about the
+       output (such as DPI, scale factor, manufacturer, etc). *)
+    Wlr.Output_layout.add_auto server.output_layout wlr_output
+  )
+
+(* This event is raised when wlr_xdg_shell receives a new xdg surface from a
+   client, either a toplevel (application window) or popup. *)
+let server_new_xdg_surface ~server _ xdg_surface =
+	(* We must add xdg popups to the scene graph so they get rendered. The
+	 * wlroots scene graph provides a helper for this, but to use it we must
+	 * provide the proper parent scene node of the xdg popup. To enable this,
+	 * we always set the user data field of xdg_surfaces to the corresponding
+	 * scene node. *)
   
-let output_frame _st _ _ =
-  failwith "todo"
-
-let server_new_output ~server:_ _ _output =
-  (* let output_ok = *)
-  (*   match Wlr.Output.preferred_mode output with *)
-  (*   | Some mode -> *)
-  (*     Wlr.Output.set_mode output mode; *)
-  (*     Wlr.Output.enable output true; *)
-  (*     Wlr.Output.commit output *)
-  (*   | None -> true *)
-  (* in *)
-  (* if output_ok then begin *)
-  (*   let o = { output; frame = Wl.Listener.create () } in *)
-  (*   Wl.Signal.add (Wlr.Output.signal_frame output) o.frame (output_frame st); *)
-  (*   st.outputs <- o :: st.outputs; *)
-  (*   Wlr.Output_layout.add_auto st.output_layout output; *)
-  (*   Wlr.Output.create_global output; *)
-  (* end *)
-  failwith "server_new_output: not implemented"
-
-let server_new_xdg_surface ~server:_ _ _ =
-  failwith "todo"
+  let () =
+    match Wlr.Xdg_surface.role xdg_surface with
+    | Popup ->
+      let surface = Wlr.Xdg_popup.parent (Wlr.Xdg_surface.popup xdg_surface) in
+      let parent = Wlr.Xdg_surface.from_surface surface in
+      ()
+    | _ -> ()
+  in
+	(* if (xdg_surface->role == WLR_XDG_SURFACE_ROLE_POPUP) { *)
+	(* 	struct wlr_xdg_surface *parent = wlr_xdg_surface_from_wlr_surface( *)
+	(* 		xdg_surface->popup->parent); *)
+	(* 	struct wlr_scene_tree *parent_tree = parent->data; *)
+	(* 	xdg_surface->data = wlr_scene_xdg_surface_create( *)
+	(* 		parent_tree, xdg_surface); *)
+	(* 	return; *)
+	(* } *)
+	(* assert(xdg_surface->role == WLR_XDG_SURFACE_ROLE_TOPLEVEL); *)
+  ()
 
 let server_cursor_motion ~server:_ _ _ =
   failwith "todo"
